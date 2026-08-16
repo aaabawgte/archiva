@@ -235,11 +235,9 @@ dialog::backdrop { background: rgb(24 24 21 / .72); backdrop-filter: blur(4px); 
   .count { width: 100%; padding: 5px 0 0; text-align: center; }
   .gallery { columns: 2; column-gap: 10px; padding-inline: 3px; }
   .photo-card, .photo-card.card-v0, .photo-card.card-v1, .photo-card.card-v2, .photo-card.card-v3, .photo-card.card-v4 { --card-x: 0px; --card-y: 0px; width: 100%; margin-bottom: 11px; }
-  .photo-card.card-v0 { --card-r: -.35deg; }
-  .photo-card.card-v1 { --card-r: .45deg; }
-  .photo-card.card-v2 { --card-r: -.15deg; }
-  .photo-card.card-v3 { --card-r: .25deg; }
-  .photo-card.card-v4 { --card-r: -.5deg; }
+  .photo-card, .photo-card:hover, .photo-card:focus-visible { transform: none; filter: none; }
+  .photo-card.card-v1, .photo-card.card-v4 { margin-bottom: 17px; }
+  .photo-card.card-v3 { margin-bottom: 7px; }
   .photo-card img { min-height: 120px; }
   .photo-meta { display: none; }
   .viewer-info { display: block; }
