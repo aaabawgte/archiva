@@ -103,8 +103,14 @@ button { cursor: pointer; }
 .filters select:hover { border-color: rgb(21 21 21 / .22); transform: translateY(-1px); }
 .count { align-self: center; color: var(--muted); font-size: 13px; padding-left: 4px; }
 
-.gallery { columns: 4 260px; column-gap: 12px; animation: gallery-in .7s .1s ease both; }
-.photo-card { position: relative; display: inline-block; width: 100%; margin: 0 0 12px; border: 0; border-radius: 18px; padding: 0; background: transparent; text-align: left; vertical-align: top; perspective: 1100px; }
+.gallery { columns: 4 260px; column-gap: clamp(10px, 1.4vw, 20px); padding: 12px 8px; animation: gallery-in .7s .1s ease both; }
+.photo-card { --card-x: 0px; --card-y: 0px; --card-r: 0deg; position: relative; display: inline-block; width: 100%; margin: 0 0 18px; border: 0; border-radius: 18px; padding: 0; background: transparent; text-align: left; vertical-align: top; perspective: 1100px; transform: translate(var(--card-x), var(--card-y)) rotate(var(--card-r)); transition: transform .32s cubic-bezier(.2,.72,.2,1), filter .32s; }
+.photo-card:hover, .photo-card:focus-visible { z-index: 2; transform: translate(var(--card-x), calc(var(--card-y) - 4px)) rotate(0deg) scale(1.018); filter: drop-shadow(0 12px 18px rgb(0 0 0 / .08)); }
+.photo-card.card-v0 { --card-x: -2%; --card-r: -.7deg; width: 96%; }
+.photo-card.card-v1 { --card-x: 4%; --card-y: 8px; --card-r: 1.15deg; width: 93%; margin-bottom: 27px; }
+.photo-card.card-v2 { --card-x: 1%; --card-y: -4px; --card-r: -.35deg; width: 99%; margin-bottom: 11px; }
+.photo-card.card-v3 { --card-x: 6%; --card-y: 3px; --card-r: .55deg; width: 91%; margin-bottom: 24px; }
+.photo-card.card-v4 { --card-x: -1%; --card-y: 10px; --card-r: -1.05deg; width: 97%; margin-bottom: 30px; }
 .photo-card-inner { position: relative; display: block; width: 100%; transform-style: preserve-3d; transition: transform .72s cubic-bezier(.2,.72,.2,1); }
 .photo-front, .photo-back { display: block; width: 100%; border-radius: 18px; overflow: hidden; backface-visibility: hidden; -webkit-backface-visibility: hidden; box-shadow: 0 1px 0 rgb(255 255 255 / .8), 0 8px 30px rgb(0 0 0 / .06); }
 .photo-front { position: relative; background: #e9e9e6; }
@@ -227,8 +233,13 @@ dialog::backdrop { background: rgb(24 24 21 / .72); backdrop-filter: blur(4px); 
   .role { display: none; }
   .filters select { flex: 1; min-width: 140px; }
   .count { width: 100%; padding: 5px 0 0; text-align: center; }
-  .gallery { columns: 2; column-gap: 8px; }
-  .photo-card { margin-bottom: 8px; }
+  .gallery { columns: 2; column-gap: 10px; padding-inline: 3px; }
+  .photo-card, .photo-card.card-v0, .photo-card.card-v1, .photo-card.card-v2, .photo-card.card-v3, .photo-card.card-v4 { --card-x: 0px; --card-y: 0px; width: 100%; margin-bottom: 11px; }
+  .photo-card.card-v0 { --card-r: -.35deg; }
+  .photo-card.card-v1 { --card-r: .45deg; }
+  .photo-card.card-v2 { --card-r: -.15deg; }
+  .photo-card.card-v3 { --card-r: .25deg; }
+  .photo-card.card-v4 { --card-r: -.5deg; }
   .photo-card img { min-height: 120px; }
   .photo-meta { display: none; }
   .viewer-info { display: block; }

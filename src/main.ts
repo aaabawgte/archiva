@@ -178,7 +178,7 @@ function filterPhotos(): void {
   if (!gallery || !count) return;
   count.textContent = `${filtered.length} ${filtered.length === 1 ? "fotografija" : "fotografija"}`;
   gallery.innerHTML = filtered.length ? filtered.map((photo) => `
-    <button class="photo-card" data-photo-id="${photo.id}" aria-label="Otvori ${escapeHtml(photo.originalName)}">
+    <button class="photo-card card-v${backVariant(photo.id)}" data-photo-id="${photo.id}" aria-label="Otvori ${escapeHtml(photo.originalName)}">
       <span class="photo-card-inner">
         <span class="photo-front">
           <img data-image-id="${photo.id}" alt="${escapeHtml(photo.description || photo.originalName)}" />
