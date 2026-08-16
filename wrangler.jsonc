@@ -1,0 +1,32 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "archiva-api",
+  "main": "worker/index.ts",
+  "workers_dev": true,
+  "compatibility_date": "2026-08-16",
+  "compatibility_flags": ["nodejs_compat"],
+  "vars": {
+    "ALLOWED_ORIGIN": "https://aaabawgte.github.io"
+  },
+  "secrets": {
+    "required": ["VIEWER_PASSWORD", "ADMIN_PASSWORD", "SESSION_SECRET"]
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "archiva",
+      "database_id": "6eb3f18f-6d38-4255-87da-f089d571d2f9",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "PHOTOS",
+      "bucket_name": "archiva-photos"
+    }
+  ],
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  }
+}

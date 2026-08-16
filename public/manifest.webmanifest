@@ -1,0 +1,17 @@
+{
+  "name": "Arhiva",
+  "short_name": "Arhiva",
+  "description": "Privatna arhiva fotografija",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f4f1ea",
+  "theme_color": "#f4f1ea",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

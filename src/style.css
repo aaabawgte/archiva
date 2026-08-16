@@ -1,0 +1,102 @@
+:root {
+  color: #20221e;
+  background: #f4f1ea;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  --paper: #f4f1ea;
+  --ink: #20221e;
+  --muted: #74766f;
+  --line: #d8d4ca;
+  --accent: #c76543;
+  --panel: #faf8f3;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; min-height: 100vh; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+
+.login {
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+.login-form { width: min(100%, 330px); text-align: center; }
+.mark { width: 46px; height: 46px; margin: 0 auto 42px; }
+.login h1 { font-family: Georgia, serif; font-size: clamp(34px, 8vw, 48px); font-weight: 400; margin: 0 0 32px; }
+.password-wrap { display: flex; border-bottom: 1px solid var(--ink); }
+.password-wrap input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; padding: 13px 4px; }
+.password-wrap button { border: 0; background: transparent; padding: 10px 4px 10px 18px; font-size: 20px; }
+.error { min-height: 22px; margin: 14px 0 0; color: #a33c2a; font-size: 13px; }
+
+.shell { width: min(1460px, 100%); margin: 0 auto; padding: 26px clamp(18px, 4vw, 58px) 80px; }
+.topbar { display: flex; align-items: center; gap: 18px; padding-bottom: 25px; }
+.brand { font: 400 27px Georgia, serif; margin-right: auto; }
+.role { color: var(--muted); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+.ghost { border: 0; background: transparent; padding: 8px; color: var(--muted); }
+.ghost:hover { color: var(--ink); }
+.filters { display: flex; gap: 10px; flex-wrap: wrap; padding: 16px 0 28px; border-top: 1px solid var(--line); }
+.filters select { appearance: none; min-width: 165px; border: 1px solid var(--line); border-radius: 999px; background: var(--panel); padding: 9px 34px 9px 14px; background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%); background-position: calc(100% - 16px) 15px, calc(100% - 11px) 15px; background-size: 5px 5px; background-repeat: no-repeat; }
+.count { margin-left: auto; align-self: center; color: var(--muted); font-size: 13px; }
+
+.gallery { columns: 4 260px; column-gap: 14px; }
+.photo-card { position: relative; display: inline-block; width: 100%; margin: 0 0 14px; border: 0; padding: 0; background: #e7e2d8; overflow: hidden; text-align: left; vertical-align: top; }
+.photo-card img { display: block; width: 100%; min-height: 180px; object-fit: cover; transition: transform .35s ease, opacity .2s; }
+.photo-card:hover img { transform: scale(1.015); }
+.photo-meta { position: absolute; inset: auto 0 0; padding: 28px 12px 11px; color: white; background: linear-gradient(transparent, rgb(0 0 0 / .66)); opacity: 0; transition: opacity .2s; }
+.photo-card:hover .photo-meta, .photo-card:focus-visible .photo-meta { opacity: 1; }
+.photo-title { display: block; font-size: 14px; }
+.photo-subtitle { display: block; margin-top: 3px; font-size: 12px; opacity: .78; }
+.empty { grid-column: 1 / -1; text-align: center; color: var(--muted); padding: 18vh 20px; }
+
+.fab { position: fixed; right: max(22px, env(safe-area-inset-right)); bottom: max(22px, env(safe-area-inset-bottom)); width: 55px; height: 55px; border-radius: 50%; border: 0; background: var(--ink); color: var(--paper); font-size: 29px; line-height: 1; box-shadow: 0 10px 28px rgb(0 0 0 / .2); }
+.fab:hover { background: var(--accent); }
+
+dialog { border: 0; padding: 0; background: transparent; max-width: none; max-height: none; }
+dialog::backdrop { background: rgb(24 24 21 / .72); backdrop-filter: blur(4px); }
+.dialog-panel { width: min(620px, calc(100vw - 28px)); max-height: calc(100svh - 28px); overflow: auto; background: var(--panel); padding: clamp(22px, 5vw, 42px); }
+.dialog-head { display: flex; align-items: center; margin-bottom: 28px; }
+.dialog-head h2 { margin: 0 auto 0 0; font: 400 30px Georgia, serif; }
+.close { border: 0; background: transparent; font-size: 25px; }
+.field { display: grid; gap: 8px; margin: 18px 0; }
+.field label { color: var(--muted); font-size: 12px; letter-spacing: .05em; text-transform: uppercase; }
+.field input, .field select, .field textarea { width: 100%; border: 1px solid var(--line); background: white; padding: 11px 12px; border-radius: 3px; }
+.field textarea { min-height: 88px; resize: vertical; }
+.field-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: end; }
+.mini { border: 1px solid var(--line); background: transparent; padding: 11px 13px; border-radius: 3px; }
+.check { display: flex; gap: 9px; align-items: center; font-size: 14px; }
+.check input { width: 17px; height: 17px; accent-color: var(--accent); }
+.primary { width: 100%; border: 0; background: var(--ink); color: white; padding: 13px 18px; margin-top: 15px; }
+.primary:hover { background: var(--accent); }
+.primary:disabled { opacity: .55; cursor: wait; }
+.progress { height: 2px; background: var(--line); margin-top: 14px; overflow: hidden; }
+.progress span { display: block; height: 100%; width: 0; background: var(--accent); transition: width .3s; }
+
+.viewer { width: min(1120px, calc(100vw - 28px)); max-height: calc(100svh - 28px); background: #111; color: white; overflow: auto; }
+.viewer img { display: block; max-width: 100%; max-height: 78svh; margin: 0 auto; }
+.viewer-info { padding: 18px 22px 23px; display: flex; gap: 18px; align-items: start; }
+.viewer-text { flex: 1; }
+.viewer-text h2 { margin: 0 0 6px; font: 400 23px Georgia, serif; }
+.viewer-text p { margin: 4px 0; color: #bbb; }
+.danger { border: 1px solid #70473b; background: transparent; color: #e69a82; padding: 8px 11px; }
+
+.menu-wrap { position: relative; }
+.menu { position: absolute; right: 0; top: 38px; z-index: 5; width: 190px; padding: 7px; background: var(--panel); border: 1px solid var(--line); box-shadow: 0 12px 35px rgb(0 0 0 / .12); }
+.menu[hidden] { display: none; }
+.menu button { width: 100%; border: 0; background: transparent; text-align: left; padding: 10px; }
+.menu button:hover { background: #eee9df; }
+
+@media (max-width: 620px) {
+  .shell { padding-top: 18px; }
+  .role { display: none; }
+  .filters select { flex: 1; min-width: 140px; }
+  .count { width: 100%; margin: 5px 0 0; }
+  .gallery { columns: 2; column-gap: 8px; }
+  .photo-card { margin-bottom: 8px; }
+  .photo-card img { min-height: 120px; }
+  .photo-meta { display: none; }
+  .viewer-info { display: block; }
+  .danger { margin-top: 14px; }
+}
