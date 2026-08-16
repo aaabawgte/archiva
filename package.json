@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "vite",
     "dev:api": "wrangler dev",
-    "build": "tsc -b && vite build",
-    "typecheck": "tsc -b --pretty false",
+    "build": "wrangler types && tsc -b && vite build",
+    "typecheck": "wrangler types && tsc -b --pretty false",
     "test": "vitest run",
     "deploy:api": "wrangler deploy",
     "deploy:web": "npm run build"
