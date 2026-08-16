@@ -191,6 +191,7 @@ function filterPhotos(): void {
           <span class="handwritten-date">${escapeHtml(displayDate(photo.takenAt))}</span>
           ${photo.location ? `<span class="handwritten-place">${escapeHtml(photo.location.name)}</span>` : ""}
           ${photo.description ? `<span class="handwritten-description">${escapeHtml(photo.description)}</span>` : ""}
+          ${photo.people?.length ? `<span class="handwritten-people">${escapeHtml(photo.people.map((person) => person.name).join(" · "))}</span>` : ""}
           <span class="photo-stamp">ARCHIVA</span>
         </span>
       </span>
@@ -241,7 +242,7 @@ function openViewer(id: string): void {
   const dialog = document.querySelector<HTMLDialogElement>("#viewer-dialog");
   const src = imageUrls.get(id);
   if (!photo || !dialog || !src) return;
-  const peopleText = role === "admin" && photo.people?.length ? photo.people.map((person) => person.name).join(", ") : "";
+  const peopleText = photo.people?.length ? photo.people.map((person) => person.name).join(", ") : "";
   dialog.innerHTML = `<article class="viewer">
     <img src="${src}" alt="${escapeHtml(photo.description || photo.originalName)}" />
     <div class="viewer-info">
@@ -249,7 +250,7 @@ function openViewer(id: string): void {
         <h2>${escapeHtml(photo.location?.name ?? "Nepoznata lokacija")}</h2>
         <p>${escapeHtml(photo.takenAt ?? "Nepoznat datum")}${photo.isPrivate ? " · Privatno" : ""}</p>
         ${photo.description ? `<p>${escapeHtml(photo.description)}</p>` : ""}
-        ${peopleText ? `<p>${escapeHtml(peopleText)}</p>` : ""}
+        ${peopleText ? `<p>Na slici: ${escapeHtml(peopleText)}</p>` : ""}
       </div>
       ${role === "admin" ? '<button class="danger" id="delete-photo">Obriši</button>' : ""}
       <button class="close" id="close-viewer" aria-label="Zatvori">×</button>

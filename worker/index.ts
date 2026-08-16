@@ -272,7 +272,7 @@ async function listPhotos(request: Request, env: Env, session: Session): Promise
     imageUrl: `/photos/${row.id}/image`,
   }));
 
-  if (session.role !== "admin" || photos.length === 0) return json(env, request, { photos });
+  if (photos.length === 0) return json(env, request, { photos });
   const placeholders = photos.map(() => "?").join(",");
   const people = await env.DB.prepare(`
     SELECT pp.photo_id, pe.id, pe.name FROM photo_people pp
