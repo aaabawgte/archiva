@@ -1,4 +1,4 @@
-const CACHE = "archiva-shell-v1";
+const CACHE = "archiva-shell-v2";
 const SHELL = ["./", "./index.html", "./manifest.webmanifest", "./icon.svg", "./config.js"];
 
 self.addEventListener("install", (event) => {

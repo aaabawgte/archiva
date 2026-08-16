@@ -233,7 +233,7 @@ dialog::backdrop { background: rgb(24 24 21 / .72); backdrop-filter: blur(4px); 
   .role { display: none; }
   .filters select { flex: 1; min-width: 140px; }
   .count { width: 100%; padding: 5px 0 0; text-align: center; }
-  .gallery { columns: 2; column-gap: 10px; padding-inline: 3px; }
+  .gallery { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 10px; columns: auto; padding-inline: 3px; }
   .photo-card, .photo-card.card-v0, .photo-card.card-v1, .photo-card.card-v2, .photo-card.card-v3, .photo-card.card-v4 { --card-x: 0px; --card-y: 0px; width: 100%; margin-bottom: 11px; }
   .photo-card, .photo-card:hover, .photo-card:focus-visible { transform: none; filter: none; }
   .photo-card.card-v1, .photo-card.card-v4 { margin-bottom: 17px; }
