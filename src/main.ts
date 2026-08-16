@@ -122,7 +122,7 @@ function renderArchive(): void {
         <div class="menu-wrap">
           <button class="ghost" id="menu-toggle" aria-label="Izbornik" aria-expanded="false">•••</button>
           <div class="menu" id="menu" hidden>
-            ${role === "admin" ? '<button id="revoke">Odjavi sve uređaje</button>' : ""}
+            ${role === "admin" ? '<button id="change-passwords">Promijeni lozinke</button><button id="revoke">Odjavi sve uređaje</button>' : ""}
             <button id="logout">Odjava</button>
           </div>
         </div>
@@ -136,6 +136,7 @@ function renderArchive(): void {
     </main>
     ${role === "admin" ? '<button class="fab" id="add-photo" aria-label="Dodaj fotografiju">+</button>' : ""}
     <dialog id="upload-dialog"></dialog>
+    <dialog id="password-dialog"></dialog>
     <dialog id="viewer-dialog"></dialog>`;
 
   document.querySelector("#location-filter")?.addEventListener("change", filterPhotos);
@@ -143,6 +144,7 @@ function renderArchive(): void {
   document.querySelector("#add-photo")?.addEventListener("click", openUpload);
   document.querySelector("#logout")?.addEventListener("click", logout);
   document.querySelector("#revoke")?.addEventListener("click", revokeAll);
+  document.querySelector("#change-passwords")?.addEventListener("click", openPasswordDialog);
   const menu = document.querySelector<HTMLElement>("#menu");
   const toggle = document.querySelector<HTMLButtonElement>("#menu-toggle");
   toggle?.addEventListener("click", () => {
@@ -342,6 +344,44 @@ async function uploadPhoto(event: Event): Promise<void> {
 async function revokeAll(): Promise<void> {
   if (!confirm("Odjaviti sve uređaje, uključujući ovaj?")) return;
   try { await api("/sessions/revoke", { method: "POST" }); } finally { logout(); }
+}
+
+function openPasswordDialog(): void {
+  const dialog = document.querySelector<HTMLDialogElement>("#password-dialog");
+  if (!dialog) return;
+  dialog.innerHTML = `<form class="dialog-panel password-panel" id="password-form">
+    <div class="dialog-head"><h2>Promijeni lozinke</h2><button type="button" class="close" id="close-passwords" aria-label="Zatvori">×</button></div>
+    <p class="dialog-note">Upiši samo lozinku koju želiš promijeniti. Svi uređaji bit će odjavljeni.</p>
+    <div class="field"><label for="current-admin-password">Trenutačna admin lozinka</label><input id="current-admin-password" type="password" autocomplete="current-password" required /></div>
+    <div class="field"><label for="new-viewer-password">Nova lozinka za gledatelje</label><input id="new-viewer-password" type="password" autocomplete="new-password" minlength="12" placeholder="Ostavi prazno bez promjene" /></div>
+    <div class="field"><label for="new-admin-password">Nova admin lozinka</label><input id="new-admin-password" type="password" autocomplete="new-password" minlength="12" placeholder="Ostavi prazno bez promjene" /></div>
+    <button class="primary" id="password-submit" type="submit">Spremi i odjavi sve</button>
+    <p class="error" id="password-error"></p>
+  </form>`;
+  dialog.querySelector("#close-passwords")?.addEventListener("click", () => dialog.close());
+  dialog.querySelector("#password-form")?.addEventListener("submit", (event) => void submitPasswordChange(event));
+  dialog.showModal();
+}
+
+async function submitPasswordChange(event: Event): Promise<void> {
+  event.preventDefault();
+  const currentPassword = document.querySelector<HTMLInputElement>("#current-admin-password")?.value ?? "";
+  const viewerPassword = document.querySelector<HTMLInputElement>("#new-viewer-password")?.value ?? "";
+  const adminPassword = document.querySelector<HTMLInputElement>("#new-admin-password")?.value ?? "";
+  const error = document.querySelector<HTMLElement>("#password-error");
+  const submit = document.querySelector<HTMLButtonElement>("#password-submit");
+  if (!error || !submit) return;
+  if (!viewerPassword && !adminPassword) { error.textContent = "Upiši barem jednu novu lozinku."; return; }
+  submit.disabled = true;
+  error.textContent = "";
+  try {
+    await api("/passwords", { method: "PATCH", body: JSON.stringify({ currentPassword, viewerPassword, adminPassword }) });
+    alert("Lozinke su promijenjene. Svi uređaji su odjavljeni.");
+    logout();
+  } catch (caught) {
+    error.textContent = caught instanceof Error ? caught.message : "Promjena lozinki nije uspjela.";
+    submit.disabled = false;
+  }
 }
 
 async function start(): Promise<void> {

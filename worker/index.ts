@@ -105,6 +105,17 @@ async function secureEqual(left: string, right: string): Promise<boolean> {
   return crypto.subtle.timingSafeEqual(leftHash, rightHash);
 }
 
+async function passwordDigest(env: Env, role: Role, password: string): Promise<string> {
+  return base64Url(await hmac(env.SESSION_SECRET, `archiva-password:${role}:${password}`));
+}
+
+async function passwordMatches(env: Env, role: Role, password: string): Promise<boolean> {
+  const key = `${role}_password_hash`;
+  const stored = await env.DB.prepare("SELECT value FROM settings WHERE key = ?").bind(key).first<{ value: string }>();
+  if (stored) return secureEqual(await passwordDigest(env, role, password), stored.value);
+  return secureEqual(password, role === "admin" ? env.ADMIN_PASSWORD : env.VIEWER_PASSWORD);
+}
+
 async function createToken(env: Env, session: Session): Promise<string> {
   const payload = base64Url(encoder.encode(JSON.stringify(session)));
   return `${payload}.${base64Url(await hmac(env.SESSION_SECRET, payload))}`;
@@ -204,8 +215,8 @@ async function login(request: Request, env: Env): Promise<Response> {
   }
 
   const [isAdmin, isViewer] = await Promise.all([
-    secureEqual(body.password, env.ADMIN_PASSWORD),
-    secureEqual(body.password, env.VIEWER_PASSWORD),
+    passwordMatches(env, "admin", body.password),
+    passwordMatches(env, "viewer", body.password),
   ]);
   const role: Role | null = isAdmin ? "admin" : isViewer ? "viewer" : null;
   if (!role) {
@@ -380,6 +391,48 @@ async function revokeSessions(request: Request, env: Env): Promise<Response> {
   return json(env, request, { ok: true });
 }
 
+function newPassword(value: unknown, label: string): string | null {
+  if (value === null || value === undefined || value === "") return null;
+  if (typeof value !== "string" || value.length < 12 || value.length > 128) {
+    throw new ApiError(400, `${label} mora imati između 12 i 128 znakova.`);
+  }
+  return value;
+}
+
+async function changePasswords(request: Request, env: Env): Promise<Response> {
+  const body = await readJson(request);
+  if (!isRecord(body) || typeof body.currentPassword !== "string") throw new ApiError(400, "Upiši trenutačnu administratorsku lozinku.");
+  if (!(await passwordMatches(env, "admin", body.currentPassword))) throw new ApiError(401, "Trenutačna administratorska lozinka nije točna.");
+
+  const viewerPassword = newPassword(body.viewerPassword, "Lozinka za gledatelje");
+  const adminPassword = newPassword(body.adminPassword, "Administratorska lozinka");
+  if (!viewerPassword && !adminPassword) throw new ApiError(400, "Upiši barem jednu novu lozinku.");
+  if (viewerPassword && adminPassword && await secureEqual(viewerPassword, adminPassword)) {
+    throw new ApiError(400, "Lozinke za gledatelje i administratora moraju biti različite.");
+  }
+  if (viewerPassword && !adminPassword && await passwordMatches(env, "admin", viewerPassword)) {
+    throw new ApiError(400, "Lozinke za gledatelje i administratora moraju biti različite.");
+  }
+  if (adminPassword && !viewerPassword && await passwordMatches(env, "viewer", adminPassword)) {
+    throw new ApiError(400, "Lozinke za gledatelje i administratora moraju biti različite.");
+  }
+
+  const statements: D1PreparedStatement[] = [];
+  if (viewerPassword) {
+    statements.push(env.DB.prepare(
+      "INSERT INTO settings (key, value) VALUES ('viewer_password_hash', ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value",
+    ).bind(await passwordDigest(env, "viewer", viewerPassword)));
+  }
+  if (adminPassword) {
+    statements.push(env.DB.prepare(
+      "INSERT INTO settings (key, value) VALUES ('admin_password_hash', ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value",
+    ).bind(await passwordDigest(env, "admin", adminPassword)));
+  }
+  statements.push(env.DB.prepare("UPDATE settings SET value = CAST(CAST(value AS INTEGER) + 1 AS TEXT) WHERE key = 'auth_epoch'"));
+  await env.DB.batch(statements);
+  return json(env, request, { ok: true });
+}
+
 async function route(request: Request, env: Env): Promise<Response> {
   assertAllowedOrigin(request, env);
   if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: corsHeaders(env, request) });
@@ -406,6 +459,7 @@ async function route(request: Request, env: Env): Promise<Response> {
   if (request.method === "POST" && path === "/people") return createNamed(request, env, "people");
   if (request.method === "POST" && path === "/photos") return createPhoto(request, env);
   if (request.method === "POST" && path === "/sessions/revoke") return revokeSessions(request, env);
+  if (request.method === "PATCH" && path === "/passwords") return changePasswords(request, env);
 
   if (match?.[1] && match[2] === "original" && request.method === "PUT") return uploadPhotoPart(request, env, match[1], "original");
   if (match?.[1] && match[2] === "thumbnail" && request.method === "PUT") return uploadPhotoPart(request, env, match[1], "thumbnail");

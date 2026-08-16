@@ -123,6 +123,8 @@ dialog::backdrop { background: rgb(24 24 21 / .72); backdrop-filter: blur(4px); 
 .dialog-panel { width: min(620px, calc(100vw - 28px)); max-height: calc(100svh - 28px); overflow: auto; border-radius: 24px; background: rgb(250 250 248 / .96); padding: clamp(22px, 5vw, 42px); box-shadow: 0 30px 100px rgb(0 0 0 / .2); }
 .dialog-head { display: flex; align-items: center; margin-bottom: 28px; }
 .dialog-head h2 { margin: 0 auto 0 0; font-size: 30px; font-weight: 620; letter-spacing: -.04em; }
+.dialog-note { margin: -12px 0 26px; color: var(--muted); font-size: 14px; line-height: 1.5; }
+.password-panel { width: min(500px, calc(100vw - 28px)); }
 .close { border: 0; background: transparent; font-size: 25px; }
 .field { display: grid; gap: 8px; margin: 18px 0; }
 .field label { color: var(--muted); font-size: 12px; letter-spacing: .05em; text-transform: uppercase; }
