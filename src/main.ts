@@ -266,7 +266,8 @@ function openUpload(): void {
       <div class="inline-create" id="new-location-row" hidden><input id="new-location-name" type="text" maxlength="100" placeholder="Naziv nove lokacije" /><button type="button" class="mini save-inline" id="save-location">Dodaj</button></div>
     </div>
     <div class="field">
-      <div class="field-row"><div><label for="upload-people">Osobe</label><select id="upload-people" multiple size="4">${people.map((person) => `<option value="${person.id}">${escapeHtml(person.name)}</option>`).join("")}</select></div><button type="button" class="mini" id="new-person">+ nova</button></div>
+      <div class="field-heading"><span class="field-label">Osobe</span><button type="button" class="mini" id="new-person">+ nova</button></div>
+      <div class="people-picker" id="upload-people">${people.length ? people.map((person) => personChoice(person)).join("") : `<p class="people-empty" id="people-empty">Još nema dodanih osoba.</p>`}</div>
       <div class="inline-create" id="new-person-row" hidden><input id="new-person-name" type="text" maxlength="100" placeholder="Ime nove osobe" /><button type="button" class="mini save-inline" id="save-person">Dodaj</button></div>
     </div>
     <div class="field"><label for="taken-at">Datum (godina, mjesec ili dan)</label><input id="taken-at" type="text" inputmode="numeric" placeholder="1998 ili 1998-07 ili 1998-07-14" pattern="\\d{4}(-\\d{2}(-\\d{2})?)?" /></div>
@@ -285,6 +286,10 @@ function openUpload(): void {
   dialog.querySelector("#new-person-name")?.addEventListener("keydown", (event) => { if ((event as KeyboardEvent).key === "Enter") { event.preventDefault(); void createNamedItem("people"); } });
   dialog.querySelector("#upload-form")?.addEventListener("submit", (event) => void uploadPhoto(event));
   dialog.showModal();
+}
+
+function personChoice(person: NamedItem, checked = false): string {
+  return `<label class="person-choice"><input type="checkbox" name="upload-person" value="${person.id}"${checked ? " checked" : ""} /><span>${escapeHtml(person.name)}</span></label>`;
 }
 
 function showInlineCreate(type: "locations" | "people"): void {
@@ -308,9 +313,13 @@ async function createNamedItem(type: "locations" | "people"): Promise<void> {
     const collection = type === "locations" ? locations : people;
     collection.push(result.item);
     collection.sort((a, b) => a.name.localeCompare(b.name, "hr"));
-    const select = document.querySelector<HTMLSelectElement>(type === "locations" ? "#upload-location" : "#upload-people");
-    if (select) {
-      select.insertAdjacentHTML("beforeend", `<option value="${result.item.id}" selected>${escapeHtml(result.item.name)}</option>`);
+    if (type === "locations") {
+      const select = document.querySelector<HTMLSelectElement>("#upload-location");
+      select?.insertAdjacentHTML("beforeend", `<option value="${result.item.id}" selected>${escapeHtml(result.item.name)}</option>`);
+    } else {
+      const picker = document.querySelector<HTMLElement>("#upload-people");
+      document.querySelector("#people-empty")?.remove();
+      picker?.insertAdjacentHTML("beforeend", personChoice(result.item, true));
     }
     input.value = "";
     row.hidden = true;
@@ -358,7 +367,7 @@ async function uploadPhoto(event: Event): Promise<void> {
   submit.disabled = true;
   error.textContent = "";
   try {
-    const personIds = [...(document.querySelector<HTMLSelectElement>("#upload-people")?.selectedOptions ?? [])].map((option) => option.value);
+    const personIds = [...document.querySelectorAll<HTMLInputElement>('input[name="upload-person"]:checked')].map((input) => input.value);
     const created = await api<{ upload: { original: string; thumbnail: string } }>("/photos", {
       method: "POST",
       body: JSON.stringify({

@@ -158,6 +158,16 @@ dialog::backdrop { background: rgb(24 24 21 / .72); backdrop-filter: blur(4px); 
 .field input:focus, .field select:focus, .field textarea:focus { border-color: rgb(21 21 21 / .3); box-shadow: 0 0 0 4px rgb(0 0 0 / .025); }
 .field textarea { min-height: 88px; resize: vertical; }
 .field-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: end; }
+.field-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.field-label { color: var(--muted); font-size: 12px; letter-spacing: .05em; text-transform: uppercase; }
+.people-picker { display: flex; flex-wrap: wrap; gap: 8px; min-height: 44px; padding: 4px 0; }
+.person-choice { position: relative; cursor: pointer; }
+.person-choice input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.person-choice span { display: block; padding: 9px 13px; border: 1px solid var(--line); border-radius: 999px; background: white; color: var(--ink); font-size: 14px; transition: background .18s, color .18s, border-color .18s, transform .18s; }
+.person-choice:hover span { border-color: rgb(21 21 21 / .3); transform: translateY(-1px); }
+.person-choice input:checked + span { border-color: var(--ink); background: var(--ink); color: white; }
+.person-choice input:focus-visible + span { outline: 3px solid rgb(0 0 0 / .12); outline-offset: 2px; }
+.people-empty { margin: 8px 0; color: var(--muted); font-size: 14px; }
 .mini { border: 1px solid var(--line); background: transparent; padding: 11px 13px; border-radius: 3px; }
 .inline-create { display: grid; grid-template-columns: 1fr auto; gap: 8px; margin-top: 8px; }
 .inline-create[hidden] { display: none; }
