@@ -159,6 +159,9 @@ dialog::backdrop { background: rgb(24 24 21 / .72); backdrop-filter: blur(4px); 
 .field textarea { min-height: 88px; resize: vertical; }
 .field-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: end; }
 .mini { border: 1px solid var(--line); background: transparent; padding: 11px 13px; border-radius: 3px; }
+.inline-create { display: grid; grid-template-columns: 1fr auto; gap: 8px; margin-top: 8px; }
+.inline-create[hidden] { display: none; }
+.inline-create .save-inline { min-width: 74px; border-radius: 12px; background: var(--ink); color: white; }
 .check { display: flex; gap: 9px; align-items: center; font-size: 14px; }
 .check input { width: 17px; height: 17px; accent-color: var(--accent); }
 .primary { width: 100%; border: 0; border-radius: 13px; background: var(--ink); color: white; padding: 14px 18px; margin-top: 15px; }

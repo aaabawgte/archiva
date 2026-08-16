@@ -261,8 +261,14 @@ function openUpload(): void {
   dialog.innerHTML = `<form class="dialog-panel" id="upload-form">
     <div class="dialog-head"><h2>Nova fotografija</h2><button type="button" class="close" id="close-upload" aria-label="Zatvori">×</button></div>
     <div class="field"><label for="photo-file">Fotografija</label><input id="photo-file" type="file" accept="image/*" required /></div>
-    <div class="field field-row"><div><label for="upload-location">Lokacija</label><select id="upload-location">${optionList(locations, "", "Nepoznata lokacija")}</select></div><button type="button" class="mini" id="new-location">+ nova</button></div>
-    <div class="field field-row"><div><label for="upload-people">Osobe</label><select id="upload-people" multiple size="4">${people.map((person) => `<option value="${person.id}">${escapeHtml(person.name)}</option>`).join("")}</select></div><button type="button" class="mini" id="new-person">+ nova</button></div>
+    <div class="field">
+      <div class="field-row"><div><label for="upload-location">Lokacija</label><select id="upload-location">${optionList(locations, "", "Nepoznata lokacija")}</select></div><button type="button" class="mini" id="new-location">+ nova</button></div>
+      <div class="inline-create" id="new-location-row" hidden><input id="new-location-name" type="text" maxlength="100" placeholder="Naziv nove lokacije" /><button type="button" class="mini save-inline" id="save-location">Dodaj</button></div>
+    </div>
+    <div class="field">
+      <div class="field-row"><div><label for="upload-people">Osobe</label><select id="upload-people" multiple size="4">${people.map((person) => `<option value="${person.id}">${escapeHtml(person.name)}</option>`).join("")}</select></div><button type="button" class="mini" id="new-person">+ nova</button></div>
+      <div class="inline-create" id="new-person-row" hidden><input id="new-person-name" type="text" maxlength="100" placeholder="Ime nove osobe" /><button type="button" class="mini save-inline" id="save-person">Dodaj</button></div>
+    </div>
     <div class="field"><label for="taken-at">Datum (godina, mjesec ili dan)</label><input id="taken-at" type="text" inputmode="numeric" placeholder="1998 ili 1998-07 ili 1998-07-14" pattern="\\d{4}(-\\d{2}(-\\d{2})?)?" /></div>
     <div class="field"><label for="description">Opis ili priča</label><textarea id="description" maxlength="2000"></textarea></div>
     <label class="check"><input id="private-photo" type="checkbox" /> Samo za administratora</label>
@@ -271,16 +277,32 @@ function openUpload(): void {
     <p class="error" id="upload-error"></p>
   </form>`;
   dialog.querySelector("#close-upload")?.addEventListener("click", () => dialog.close());
-  dialog.querySelector("#new-location")?.addEventListener("click", () => void createNamedItem("locations"));
-  dialog.querySelector("#new-person")?.addEventListener("click", () => void createNamedItem("people"));
+  dialog.querySelector("#new-location")?.addEventListener("click", () => showInlineCreate("locations"));
+  dialog.querySelector("#new-person")?.addEventListener("click", () => showInlineCreate("people"));
+  dialog.querySelector("#save-location")?.addEventListener("click", () => void createNamedItem("locations"));
+  dialog.querySelector("#save-person")?.addEventListener("click", () => void createNamedItem("people"));
+  dialog.querySelector("#new-location-name")?.addEventListener("keydown", (event) => { if ((event as KeyboardEvent).key === "Enter") { event.preventDefault(); void createNamedItem("locations"); } });
+  dialog.querySelector("#new-person-name")?.addEventListener("keydown", (event) => { if ((event as KeyboardEvent).key === "Enter") { event.preventDefault(); void createNamedItem("people"); } });
   dialog.querySelector("#upload-form")?.addEventListener("submit", (event) => void uploadPhoto(event));
   dialog.showModal();
 }
 
+function showInlineCreate(type: "locations" | "people"): void {
+  const singular = type === "locations" ? "location" : "person";
+  const row = document.querySelector<HTMLElement>(`#new-${singular}-row`);
+  const input = document.querySelector<HTMLInputElement>(`#new-${singular}-name`);
+  if (!row || !input) return;
+  row.hidden = false;
+  input.focus();
+}
+
 async function createNamedItem(type: "locations" | "people"): Promise<void> {
-  const label = type === "locations" ? "Naziv lokacije" : "Ime osobe";
-  const name = prompt(label)?.trim();
-  if (!name) return;
+  const singular = type === "locations" ? "location" : "person";
+  const input = document.querySelector<HTMLInputElement>(`#new-${singular}-name`);
+  const row = document.querySelector<HTMLElement>(`#new-${singular}-row`);
+  const error = document.querySelector<HTMLElement>("#upload-error");
+  const name = input?.value.trim() ?? "";
+  if (!name || !input || !row) { input?.focus(); return; }
   try {
     const result = await api<{ item: NamedItem }>(`/${type}`, { method: "POST", body: JSON.stringify({ name }) });
     const collection = type === "locations" ? locations : people;
@@ -290,7 +312,13 @@ async function createNamedItem(type: "locations" | "people"): Promise<void> {
     if (select) {
       select.insertAdjacentHTML("beforeend", `<option value="${result.item.id}" selected>${escapeHtml(result.item.name)}</option>`);
     }
-  } catch (caught) { alert(caught instanceof Error ? caught.message : "Spremanje nije uspjelo."); }
+    input.value = "";
+    row.hidden = true;
+    if (error) error.textContent = "";
+  } catch (caught) {
+    if (error) error.textContent = caught instanceof Error ? caught.message : "Spremanje nije uspjelo.";
+    input.focus();
+  }
 }
 
 async function makeThumbnail(file: File): Promise<Blob> {
