@@ -104,9 +104,35 @@ button { cursor: pointer; }
 .count { align-self: center; color: var(--muted); font-size: 13px; padding-left: 4px; }
 
 .gallery { columns: 4 260px; column-gap: 12px; animation: gallery-in .7s .1s ease both; }
-.photo-card { position: relative; display: inline-block; width: 100%; margin: 0 0 12px; border: 0; border-radius: 18px; padding: 0; background: #e9e9e6; overflow: hidden; text-align: left; vertical-align: top; box-shadow: 0 1px 0 rgb(255 255 255 / .8), 0 8px 30px rgb(0 0 0 / .04); }
-.photo-card img { display: block; width: 100%; min-height: 180px; object-fit: cover; transition: transform .35s ease, opacity .2s; }
-.photo-card:hover img { transform: scale(1.025); }
+.photo-card { position: relative; display: inline-block; width: 100%; margin: 0 0 12px; border: 0; border-radius: 18px; padding: 0; background: transparent; text-align: left; vertical-align: top; perspective: 1100px; }
+.photo-card-inner { position: relative; display: block; width: 100%; transform-style: preserve-3d; transition: transform .72s cubic-bezier(.2,.72,.2,1); }
+.photo-front, .photo-back { display: block; width: 100%; border-radius: 18px; overflow: hidden; backface-visibility: hidden; -webkit-backface-visibility: hidden; box-shadow: 0 1px 0 rgb(255 255 255 / .8), 0 8px 30px rgb(0 0 0 / .06); }
+.photo-front { position: relative; background: #e9e9e6; }
+.photo-card img { display: block; width: 100%; min-height: 180px; object-fit: cover; transition: opacity .2s; }
+.photo-back {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 24px;
+  color: #34332f;
+  text-align: center;
+  transform: rotateY(180deg);
+  background:
+    radial-gradient(circle at 18% 20%, rgb(80 70 50 / .035) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 76% 64%, rgb(80 70 50 / .025) 0 1px, transparent 1.5px),
+    linear-gradient(135deg, #f1eee5, #e8e3d7);
+  background-size: 19px 19px, 23px 23px, auto;
+  box-shadow: inset 0 0 34px rgb(91 79 54 / .08), 0 12px 38px rgb(0 0 0 / .1);
+}
+.photo-card:hover .photo-card-inner, .photo-card:focus-visible .photo-card-inner { transform: rotateY(180deg); }
+.handwritten-date, .handwritten-place { font-family: "Bradley Hand", "Noteworthy", "Segoe Print", cursive; transform: rotate(-3deg); }
+.handwritten-date { font-size: clamp(22px, 4vw, 35px); line-height: 1.1; }
+.handwritten-place { color: #706d64; font-size: clamp(14px, 2vw, 19px); transform: rotate(1.5deg); }
+.photo-stamp { position: absolute; right: 16px; bottom: 14px; color: rgb(73 68 57 / .3); font-size: 8px; font-weight: 700; letter-spacing: .24em; transform: rotate(-2deg); }
 .photo-meta { position: absolute; inset: auto 0 0; padding: 28px 12px 11px; color: white; background: linear-gradient(transparent, rgb(0 0 0 / .66)); opacity: 0; transition: opacity .2s; }
 .photo-card:hover .photo-meta, .photo-card:focus-visible .photo-meta { opacity: 1; }
 .photo-title { display: block; font-size: 14px; }
@@ -163,6 +189,8 @@ dialog::backdrop { background: rgb(24 24 21 / .72); backdrop-filter: blur(4px); 
   .photo-card { margin-bottom: 8px; }
   .photo-card img { min-height: 120px; }
   .photo-meta { display: none; }
+  .photo-card-inner { transform: none !important; }
+  .photo-back { display: none; }
   .viewer-info { display: block; }
   .danger { margin-top: 14px; }
 }

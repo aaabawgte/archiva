@@ -113,6 +113,14 @@ function optionList(items: NamedItem[], selected = "", placeholder = "Sve"): str
   return `<option value="">${escapeHtml(placeholder)}</option>${items.map((item) => `<option value="${item.id}" ${item.id === selected ? "selected" : ""}>${escapeHtml(item.name)}</option>`).join("")}`;
 }
 
+function displayDate(value: string | null): string {
+  if (!value) return "Datum nije zapisan";
+  const [year, month, day] = value.split("-");
+  if (year && month && day) return `${Number(day)}. ${Number(month)}. ${year}.`;
+  if (year && month) return `${Number(month)}. mjesec ${year}.`;
+  return `${year}.`;
+}
+
 function renderArchive(): void {
   app.innerHTML = `
     <main class="shell">
@@ -171,10 +179,19 @@ function filterPhotos(): void {
   count.textContent = `${filtered.length} ${filtered.length === 1 ? "fotografija" : "fotografija"}`;
   gallery.innerHTML = filtered.length ? filtered.map((photo) => `
     <button class="photo-card" data-photo-id="${photo.id}" aria-label="Otvori ${escapeHtml(photo.originalName)}">
-      <img data-image-id="${photo.id}" alt="${escapeHtml(photo.description || photo.originalName)}" />
-      <span class="photo-meta">
-        <span class="photo-title">${escapeHtml(photo.location?.name ?? "Nepoznata lokacija")}</span>
-        <span class="photo-subtitle">${escapeHtml(photo.takenAt ?? "Nepoznat datum")}</span>
+      <span class="photo-card-inner">
+        <span class="photo-front">
+          <img data-image-id="${photo.id}" alt="${escapeHtml(photo.description || photo.originalName)}" />
+          <span class="photo-meta">
+            <span class="photo-title">${escapeHtml(photo.location?.name ?? "Nepoznata lokacija")}</span>
+            <span class="photo-subtitle">${escapeHtml(displayDate(photo.takenAt))}</span>
+          </span>
+        </span>
+        <span class="photo-back" aria-hidden="true">
+          <span class="handwritten-date">${escapeHtml(displayDate(photo.takenAt))}</span>
+          ${photo.location ? `<span class="handwritten-place">${escapeHtml(photo.location.name)}</span>` : ""}
+          <span class="photo-stamp">ARHIVA</span>
+        </span>
       </span>
     </button>`).join("") : '<p class="empty">Još nema fotografija.</p>';
   for (const card of document.querySelectorAll<HTMLButtonElement>(".photo-card")) {
