@@ -64,10 +64,10 @@ function renderLogin(message = ""): void {
     <main class="login">
       <form class="login-form" id="login-form">
         <img class="mark" src="./icon.svg" alt="" />
-        <h1>Arhiva</h1>
+        <h1>Archiva</h1>
         <div class="password-wrap">
           <input id="password" type="password" autocomplete="current-password" placeholder="Lozinka" aria-label="Lozinka" required autofocus />
-          <button type="submit" aria-label="Otvori arhivu">→</button>
+          <button type="submit" aria-label="Otvori Archivu">→</button>
         </div>
         <p class="error" id="login-error">${escapeHtml(message)}</p>
       </form>
@@ -105,7 +105,7 @@ async function loadArchive(): Promise<void> {
     renderArchive();
     await loadVisibleImages();
   } catch (caught) {
-    if (token) renderLogin(caught instanceof Error ? caught.message : "Arhivu nije moguće učitati.");
+    if (token) renderLogin(caught instanceof Error ? caught.message : "Archivu nije moguće učitati.");
   }
 }
 
@@ -125,7 +125,7 @@ function renderArchive(): void {
   app.innerHTML = `
     <main class="shell">
       <header class="topbar">
-        <span class="brand">Arhiva</span>
+        <span class="brand">Archiva</span>
         <span class="role">${role === "admin" ? "Administriranje" : "Pregled"}</span>
         <div class="menu-wrap">
           <button class="ghost" id="menu-toggle" aria-label="Izbornik" aria-expanded="false">•••</button>
@@ -190,7 +190,7 @@ function filterPhotos(): void {
         <span class="photo-back" aria-hidden="true">
           <span class="handwritten-date">${escapeHtml(displayDate(photo.takenAt))}</span>
           ${photo.location ? `<span class="handwritten-place">${escapeHtml(photo.location.name)}</span>` : ""}
-          <span class="photo-stamp">ARHIVA</span>
+          <span class="photo-stamp">ARCHIVA</span>
         </span>
       </span>
     </button>`).join("") : '<p class="empty">Još nema fotografija.</p>';

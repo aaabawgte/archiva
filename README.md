@@ -1,6 +1,6 @@
-# Arhiva
+# Archiva
 
-Minimalistička privatna PWA arhiva fotografija. Statički frontend objavljuje se na GitHub Pages, a Cloudflare Worker pruža autentikaciju i API. Fotografije su privatne u R2, a metapodaci u D1.
+Archiva je minimalistička privatna PWA zbirka fotografija. Statički frontend objavljuje se na GitHub Pages, a Cloudflare Worker pruža autentikaciju i API. Fotografije su privatne u R2, a metapodaci u D1.
 
 ## Što prva verzija podržava
 
