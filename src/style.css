@@ -167,6 +167,10 @@ button { cursor: pointer; }
 .fab:hover { transform: translateY(-3px) scale(1.02); border-radius: 50%; box-shadow: 0 18px 44px rgb(0 0 0 / .24); }
 
 @keyframes gallery-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes viewer-backdrop-in { from { background: rgb(24 24 21 / 0); backdrop-filter: blur(0); } to { background: rgb(24 24 21 / .72); backdrop-filter: blur(8px); } }
+@keyframes viewer-in { from { opacity: 0; transform: translateY(22px) scale(.88); filter: blur(5px); } to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); } }
+@keyframes viewer-image-in { from { opacity: .35; transform: scale(1.045); } to { opacity: 1; transform: scale(1); } }
+@keyframes viewer-info-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
 dialog { border: 0; padding: 0; background: transparent; max-width: none; max-height: none; }
 dialog::backdrop { background: rgb(24 24 21 / .72); backdrop-filter: blur(4px); }
@@ -204,9 +208,10 @@ dialog::backdrop { background: rgb(24 24 21 / .72); backdrop-filter: blur(4px); 
 .progress { height: 2px; background: var(--line); margin-top: 14px; overflow: hidden; }
 .progress span { display: block; height: 100%; width: 0; background: var(--accent); transition: width .3s; }
 
-.viewer { width: min(1120px, calc(100vw - 28px)); max-height: calc(100svh - 28px); border-radius: 24px; background: #111; color: white; overflow: auto; }
-.viewer img { display: block; max-width: 100%; max-height: 78svh; margin: 0 auto; }
-.viewer-info { padding: 18px 22px 23px; display: flex; gap: 18px; align-items: start; }
+#viewer-dialog[open]::backdrop { animation: viewer-backdrop-in .42s ease-out both; }
+.viewer { width: min(1120px, calc(100vw - 28px)); max-height: calc(100svh - 28px); border-radius: 24px; background: #111; color: white; overflow: auto; transform-origin: center; animation: viewer-in .52s cubic-bezier(.18,.8,.2,1) both; }
+.viewer img { display: block; max-width: 100%; max-height: 78svh; margin: 0 auto; animation: viewer-image-in .68s cubic-bezier(.2,.72,.2,1) both; }
+.viewer-info { padding: 18px 22px 23px; display: flex; gap: 18px; align-items: start; animation: viewer-info-in .38s .16s ease-out both; }
 .viewer-text { flex: 1; }
 .viewer-text h2 { margin: 0 0 6px; font-size: 23px; font-weight: 600; letter-spacing: -.03em; }
 .viewer-text p { margin: 4px 0; color: #bbb; }
