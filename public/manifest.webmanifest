@@ -1,7 +1,7 @@
 {
   "name": "Archiva",
   "short_name": "Archiva",
-  "description": "Privatna zbirka fotografija",
+  "description": "Archiva",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#f4f1ea",
