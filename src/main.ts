@@ -270,7 +270,7 @@ function openUpload(): void {
       <div class="people-picker" id="upload-people">${people.length ? people.map((person) => personChoice(person)).join("") : `<p class="people-empty" id="people-empty">Još nema dodanih osoba.</p>`}</div>
       <div class="inline-create" id="new-person-row" hidden><input id="new-person-name" type="text" maxlength="100" placeholder="Ime nove osobe" /><button type="button" class="mini save-inline" id="save-person">Dodaj</button></div>
     </div>
-    <div class="field"><label for="taken-at">Datum (godina, mjesec ili dan)</label><input id="taken-at" type="text" inputmode="numeric" placeholder="1998 ili 1998-07 ili 1998-07-14" pattern="\\d{4}(-\\d{2}(-\\d{2})?)?" /></div>
+    <div class="field"><label for="taken-at">Datum fotografije</label><input id="taken-at" type="date" /></div>
     <div class="field"><label for="description">Opis ili priča</label><textarea id="description" maxlength="2000"></textarea></div>
     <label class="check"><input id="private-photo" type="checkbox" /> Samo za administratora</label>
     <button class="primary" id="upload-submit" type="submit">Spremi fotografiju</button>
