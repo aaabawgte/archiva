@@ -129,10 +129,34 @@ button { cursor: pointer; }
   box-shadow: inset 0 0 34px rgb(91 79 54 / .08), 0 12px 38px rgb(0 0 0 / .1);
 }
 .photo-card:hover .photo-card-inner, .photo-card:focus-visible .photo-card-inner { transform: rotateY(180deg); }
-.handwritten-date, .handwritten-place { font-family: "Bradley Hand", "Noteworthy", "Segoe Print", cursive; transform: rotate(-3deg); }
+.handwritten-date, .handwritten-place, .handwritten-description { position: relative; z-index: 1; font-family: "Bradley Hand", "Noteworthy", "Segoe Print", cursive; }
 .handwritten-date { font-size: clamp(22px, 4vw, 35px); line-height: 1.1; }
-.handwritten-place { color: #706d64; font-size: clamp(14px, 2vw, 19px); transform: rotate(1.5deg); }
+.handwritten-place { color: #706d64; font-size: clamp(14px, 2vw, 19px); }
+.handwritten-description { display: -webkit-box; max-width: 94%; overflow: hidden; color: #57544d; font-size: clamp(12px, 1.45vw, 16px); line-height: 1.25; -webkit-box-orient: vertical; -webkit-line-clamp: 4; }
 .photo-stamp { position: absolute; right: 16px; bottom: 14px; color: rgb(73 68 57 / .3); font-size: 8px; font-weight: 700; letter-spacing: .24em; transform: rotate(-2deg); }
+.back-v0 .handwritten-date { transform: rotate(-3deg); }
+.back-v0 .handwritten-place { transform: rotate(1.5deg); }
+.back-v0 .handwritten-description { transform: rotate(-1deg); }
+.back-v1 { align-items: flex-start; padding-left: 12%; text-align: left; background: linear-gradient(146deg, #f4f0e5, #e6dfcf); }
+.back-v1 .handwritten-date { transform: rotate(2deg); }
+.back-v1 .handwritten-place { margin-left: 8%; transform: rotate(-2deg); }
+.back-v1 .handwritten-description { margin-top: 4px; transform: rotate(.8deg); }
+.back-v1 .photo-stamp { right: auto; left: 18px; transform: rotate(4deg); }
+.back-v2 { justify-content: flex-start; padding-top: 15%; background: linear-gradient(122deg, #ece8dd, #f5f1e8); }
+.back-v2 .handwritten-date { transform: rotate(-1deg); }
+.back-v2 .handwritten-place { transform: rotate(3deg); }
+.back-v2 .handwritten-description { margin-top: auto; margin-bottom: 10%; transform: rotate(-1.8deg); }
+.back-v2 .photo-stamp { bottom: auto; top: 15px; transform: rotate(-5deg); }
+.back-v3 { align-items: flex-end; padding-right: 11%; text-align: right; background: linear-gradient(158deg, #eee8dc, #e4ddce); }
+.back-v3 .handwritten-date { transform: rotate(3deg); }
+.back-v3 .handwritten-place { margin-right: 9%; transform: rotate(-1deg); }
+.back-v3 .handwritten-description { transform: rotate(1.5deg); }
+.back-v3 .photo-stamp { right: auto; left: 17px; bottom: 17px; transform: rotate(-4deg); }
+.back-v4 { background: linear-gradient(132deg, #f0ebdf, #e8e0d1); }
+.back-v4 .handwritten-date { margin-left: -10%; transform: rotate(-4deg); }
+.back-v4 .handwritten-place { margin-left: 12%; transform: rotate(2.5deg); }
+.back-v4 .handwritten-description { transform: rotate(.5deg); }
+.back-v4 .photo-stamp { right: 22px; bottom: 19px; transform: rotate(5deg); }
 .photo-meta { position: absolute; inset: auto 0 0; padding: 28px 12px 11px; color: white; background: linear-gradient(transparent, rgb(0 0 0 / .66)); opacity: 0; transition: opacity .2s; }
 .photo-card:hover .photo-meta, .photo-card:focus-visible .photo-meta { opacity: 1; }
 .photo-title { display: block; font-size: 14px; }

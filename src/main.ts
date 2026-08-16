@@ -187,9 +187,10 @@ function filterPhotos(): void {
             <span class="photo-subtitle">${escapeHtml(displayDate(photo.takenAt))}</span>
           </span>
         </span>
-        <span class="photo-back" aria-hidden="true">
+        <span class="photo-back back-v${backVariant(photo.id)}" aria-hidden="true">
           <span class="handwritten-date">${escapeHtml(displayDate(photo.takenAt))}</span>
           ${photo.location ? `<span class="handwritten-place">${escapeHtml(photo.location.name)}</span>` : ""}
+          ${photo.description ? `<span class="handwritten-description">${escapeHtml(photo.description)}</span>` : ""}
           <span class="photo-stamp">ARCHIVA</span>
         </span>
       </span>
@@ -198,6 +199,12 @@ function filterPhotos(): void {
     card.addEventListener("click", () => openViewer(card.dataset.photoId ?? ""));
   }
   void loadVisibleImages();
+}
+
+function backVariant(id: string): number {
+  let hash = 0;
+  for (const character of id) hash = (hash * 31 + character.charCodeAt(0)) >>> 0;
+  return hash % 5;
 }
 
 async function imageBlobUrl(photo: Photo): Promise<string> {
