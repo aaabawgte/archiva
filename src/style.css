@@ -226,10 +226,14 @@ dialog::backdrop { background: rgb(24 24 21 / .72); backdrop-filter: blur(4px); 
   .photo-card { margin-bottom: 8px; }
   .photo-card img { min-height: 120px; }
   .photo-meta { display: none; }
-  .photo-card-inner { transform: none !important; }
-  .photo-back { display: none; }
   .viewer-info { display: block; }
   .danger { margin-top: 14px; }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .photo-card:hover .photo-card-inner { transform: none; }
+  .photo-card.is-flipped .photo-card-inner { transform: rotateY(180deg); }
+  .photo-card-inner { transition-duration: .62s; }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -196,7 +196,14 @@ function filterPhotos(): void {
       </span>
     </button>`).join("") : '<p class="empty">Još nema fotografija.</p>';
   for (const card of document.querySelectorAll<HTMLButtonElement>(".photo-card")) {
-    card.addEventListener("click", () => openViewer(card.dataset.photoId ?? ""));
+    card.addEventListener("click", () => {
+      if (matchMedia("(hover: none), (pointer: coarse)").matches && !card.classList.contains("is-flipped")) {
+        document.querySelectorAll(".photo-card.is-flipped").forEach((item) => item.classList.remove("is-flipped"));
+        card.classList.add("is-flipped");
+        return;
+      }
+      openViewer(card.dataset.photoId ?? "");
+    });
   }
   void loadVisibleImages();
 }
